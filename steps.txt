@@ -1,0 +1,6 @@
+1. start virtual environment - venv\Scripts\activate
+2. running backend - uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+
+    we can view docs - http://localhost:8000/docs
+
+    testing (simulate esp32) - curl.exe --% -X POST "http://localhost:8000/api/sensor/event" -H "Content-Type: application/json" -d "{\"area id\": \"LIBRARY 01\", \"event\": \"ENTER\"}"
