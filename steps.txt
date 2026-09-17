@@ -9,7 +9,9 @@
     // Wi-Fi credentials and your computer's Local IP
     const char* ssid = "YOUR_WIFI_SSID";
     const char* password = "YOUR_WIFI_PASSWORD";
-    const char* serverUrl = "http://YOUR_LOCAL_IP:8000/api/sensor/event";
+    
+    // The live URL provided by Render or your hosting platform
+    const char* serverUrl = "https://your-app-name.onrender.com/api/sensor/event";
 
 4. Find Hotspot SSID
     Open your phone's settings and navigate to Mobile Hotspot (Android) or Personal Hotspot (iOS). 
