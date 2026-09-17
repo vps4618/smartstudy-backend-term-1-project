@@ -1,31 +1,22 @@
 from fastapi import FastAPI , HTTPException
-from schemas import SensorEvent
+from schemas import SensorEvent,mock_db
 
 app = FastAPI(title = "SmartStudy Backend")
 
-# In-memory storage for testing prototype logic
-study_areas = {
-    "LIBRARY 01" : {
-        "name" : "Library 1st Floor",
-        "capacity" : 50,
-        "current_occupancy" : 20,
-        "wifi_available" : True,
-        "power_available" : True
-    }
-}
-
+# info page
 @app.get("/")
 def root():
     return {"status" : "SmartStudy API online"}
 
+# gathering posted data and update db
 @app.post("/api/sensor/event")
 def handle_sensor_event(event_data : SensorEvent):
     area_id = event_data.area_id
 
-    if area_id not in study_areas:
+    if area_id not in mock_db:
         raise HTTPException(status_code=404 , detail = "Study area not found")
 
-    area = study_areas[area_id]
+    area = mock_db[area_id]
 
     if event_data.event == "ENTER":
         if area["current_occupancy"] < area["capacity"]:
@@ -40,7 +31,22 @@ def handle_sensor_event(event_data : SensorEvent):
         "new_occupancy" : area["current_occupancy"]
     }
 
+# displaying study area details
 @app.get("/api/study-areas")
 def get_study_areas():
-    return study_areas
+    return mock_db
 
+# displaying recommendations
+@app.get("/api/recommendations")
+def get_recommendations():
+    results = []
+    for area_id, data in mock_db.items():
+        availability_ratio = (data["capacity"] - data["current_occupancy"]) / data["capacity"]
+        
+        # Calculate base score (adjust with actual DB metrics later)
+        score = (0.40 * availability_ratio) + (0.15 * int(data["wifi"])) + (0.10 * int(data["power"]))
+        
+        results.append({"area_id": area_id, "score": score, "current_occupancy": data["current_occupancy"]})
+    
+    # Sort descending by score
+    return sorted(results, key=lambda x: x["score"], reverse=True)

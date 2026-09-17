@@ -4,3 +4,23 @@
     we can view docs - http://localhost:8000/docs
 
     testing (simulate esp32) - curl.exe --% -X POST "http://localhost:8000/api/sensor/event" -H "Content-Type: application/json" -d "{\"area id\": \"LIBRARY 01\", \"event\": \"ENTER\"}"
+
+3. hardware changes needed
+    // Wi-Fi credentials and your computer's Local IP
+    const char* ssid = "YOUR_WIFI_SSID";
+    const char* password = "YOUR_WIFI_PASSWORD";
+    const char* serverUrl = "http://YOUR_LOCAL_IP:8000/api/sensor/event";
+
+4. Find Hotspot SSID
+    Open your phone's settings and navigate to Mobile Hotspot (Android) or Personal Hotspot (iOS). 
+    Note down the Network Name (SSID) and the Password. 
+    You can temporarily rename the SSID to something simple without spaces (like SmartStudyNet) to prevent typos in the ESP32 code.
+
+5. Connect Laptop and Find IPv4
+    Connect Laptop and Find IPv4:Windows.Connect your laptop to this mobile hotspot. 
+    Open the Command Prompt and type ipconfig.
+     Scroll to the section labeled Wireless LAN adapter Wi-Fi and note the IPv4 Address (it will likely start with 192.168. or 172.20.).
+
+# important
+To verify this setup is working before the ESP32 is even connected, ensure your FastAPI app is running on 0.0.0.0.
+ Then, open a web browser on your phone (which is broadcasting the hotspot) and type http://YOUR_IPV4:8000/api/study-areas.
