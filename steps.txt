@@ -38,3 +38,9 @@ vercel hosting
 # pip install -r requirements.txt this required when installing libraries
 # building command not required
 # link - https://smartstudy-backend-psi.vercel.app/api/
+# since web api connected to github repo , changes will sync 
+# Vercel hosting has no sleeping after inactivity - so uptime monitor requesting/ or hardware auto request not needed
+
+    Cold Start Duration: While Render's free tier can cause a 10–30 second timeout after 15 minutes of inactivity, Vercel's cold starts happen in a fraction of a second to a few seconds (depending on the weight of your Python imports and libraries).
+
+    No Heartbeat Required: You do not need to configure cron jobs or uptime monitors to keep a Vercel deployment from timing out or suspending.
