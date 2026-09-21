@@ -1,7 +1,19 @@
-from fastapi import FastAPI , HTTPException
+from fastapi import FastAPI , HTTPException , Security , Depends
+from fastapi.security.api_key import APIKeyHeader
 from schemas import SensorEvent,mock_db
 
-app = FastAPI(title = "SmartStudy Backend")
+# ! Disable the /docs , /redoc, and openapi.json routes in production
+app = FastAPI(docs_url=None,redoc_url=None,openapi_url=None,title = "SmartStudy Backend")
+
+# Define a strong secret key (Do not share this publicly)
+SECRET_API_KEY = "gizmo-secure-key-2026" 
+api_key_header = APIKeyHeader(name="X-API-Key", auto_error=True)
+
+# ! Dependency function to validate incoming requests
+def verify_api_key(api_key: str = Security(api_key_header)):
+    if api_key != SECRET_API_KEY:
+        raise HTTPException(status_code=403, detail="Access forbidden: Invalid API Key")
+    return api_key
 
 # info page
 @app.get("/")
@@ -10,7 +22,7 @@ def root():
 
 # gathering posted data and update db
 @app.post("/api/sensor/event")
-def handle_sensor_event(event_data : SensorEvent):
+def handle_sensor_event(event_data : SensorEvent, api_key: str = Depends(verify_api_key)):
     area_id = event_data.area_id
 
     if area_id not in mock_db:

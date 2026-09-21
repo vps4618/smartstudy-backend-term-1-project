@@ -6,6 +6,7 @@ development
     we can view docs - http://localhost:8000/docs
 
     testing (simulate esp32) - curl.exe --% -X POST "https://smartstudy-backend-psi.vercel.app/api/sensor/event" -H "Content-Type: application/json" -d "{\"area id\": \"LIBRARY_01\", \"event\": \"ENTER\"}"
+
 3. hardware changes needed
     // Wi-Fi credentials and your computer's Local IP
     const char* ssid = "YOUR_WIFI_SSID";
@@ -44,3 +45,8 @@ vercel hosting
     Cold Start Duration: While Render's free tier can cause a 10–30 second timeout after 15 minutes of inactivity, Vercel's cold starts happen in a fraction of a second to a few seconds (depending on the weight of your Python imports and libraries).
 
     No Heartbeat Required: You do not need to configure cron jobs or uptime monitors to keep a Vercel deployment from timing out or suspending.
+
+26/09/21 (security features)
+===========
+# FastAPI auto-generated documentation deleted as it can be use to alter database
+# important - API key created , because otherwise any device can send post request to server and update values.
