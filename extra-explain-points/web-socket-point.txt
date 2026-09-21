@@ -1,0 +1,3 @@
+standard HTTP request (like your ESP32 sending a POST) as sending a letter. You drop it in the mail, the server reads it, sends a reply back, and the transaction is completely over. If the server wants to tell you something new later, it cannot—it has to wait for you to send another letter asking for an update.
+
+A WebSocket, on the other hand, is like a phone call. Once the student's browser connects to the server, the line stays open permanently. The server can push live occupancy updates down that open line at any moment, without the browser having to constantly refresh or ask "Did the occupancy change yet?

@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <p id="status"></p>
+    <br>
+    <p id="occupancy-count"></p>
+    <br>
+    <p id="log"></p>
+    <script>
+      const statusEl = document.getElementById("status");
+      const occupancyEl = document.getElementById("occupancy-count");
+      const logEl = document.getElementById("log");
+
+      // 1. Establish WebSocket connection to your FastAPI backend
+      const socket = new WebSocket("wss://smartstudy-backend-psi.vercel.app/api/ws");
+
+      // 2. Connection successfully opened
+      socket.onopen = () => {
+        statusEl.textContent = "Connected";
+        statusEl.className = "status-badge connected";
+        logMessage("WebSocket connection established.");
+      };
+
+      // 3. Listen for incoming JSON broadcasts from the backend
+      socket.onmessage = (event) => {
+        const data = JSON.parse(event.data);
+        logMessage(`Received: ${JSON.stringify(data)}`);
+
+        // Update DOM when an occupancy broadcast arrives
+        if (data.area_id && data.new_occupancy !== undefined) {
+          occupancyEl.textContent = data.new_occupancy;
+        }
+      };
+
+      // 4. Handle errors
+      socket.onerror = (error) => {
+        console.error("WebSocket Error:", error);
+        logMessage("WebSocket encountered an error.");
+      };
+
+      // 5. Handle disconnection
+      socket.onclose = () => {
+        statusEl.textContent = "Disconnected";
+        statusEl.className = "status-badge disconnected";
+        logMessage("WebSocket connection closed.");
+      };
+
+      function logMessage(text) {
+        const entry = document.createElement("div");
+        entry.textContent = `[\({new Date().toLocaleTimeString()}]\){text}`;
+        logEl.prepend(entry);
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,20 @@
+1. Why async and await?
+------------------------
+
+Because WebSockets stay open permanently, your server is essentially sitting on the phone waiting for someone to speak. If you used normal Python code, the server would completely freeze while waiting, meaning it could not accept sensor data from the ESP32 at the same time.
+
+async (Asynchronous): Tells Python that this specific function can be paused.
+
+await: Tells Python, "Pause right here and wait for a WebSocket message, but feel free to go answer other HTTP requests (like the ESP32) in the background while you wait."
+
+2. What is the ConnectionManager?
+----------------------------------
+
+When 50 students open your website, that means there are 50 open phone lines at the same time. FastAPI does not automatically remember who is connected.
+The ConnectionManager acts as your server's contact book.
+
+When a student opens the page, manager.connect() adds their WebSocket to a Python list.
+
+When a student closes the browser, manager.disconnect() removes them.
+
+When the ESP32 sends a new sensor event, manager.broadcast() loops through that list and pushes the new occupancy number to all 50 students simultaneously.

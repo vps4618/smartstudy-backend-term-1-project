@@ -6,6 +6,7 @@ development
     we can view docs - http://localhost:8000/docs
 
     testing (simulate esp32) -  curl.exe --% -X POST "https://smartstudy-backend-psi.vercel.app/api/sensor/event" -H "Content-Type: application/json" -H "X-API-Key:your_key" -d "{\"area id\": \"LIBRARY_02\", \"event\": \"ENTER\"}"
+
 3. hardware changes needed
     // Wi-Fi credentials and your computer's Local IP
     const char* ssid = "YOUR_WIFI_SSID";
@@ -55,3 +56,9 @@ vercel hosting
 # websocket adding reason - they are faster than http request and allow realtime updates
 # frontend dont need secure key as they dont change database values
 # new key added to vercel and os module will be use to import that.
+
+# point - http request is like a letter (server only can tell update , if we request it only)
+        web socket is like a phone call (server can push updates at any moment without browser havig constantly ask)
+
+# hardware wifi ssid , password , key added to local secret file for added protection
+

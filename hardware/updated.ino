@@ -2,12 +2,11 @@
 #include <WiFi.h>
 #include <WiFiClientSecure.h>
 #include <HTTPClient.h>
+#include "secrets.h" // Import the hidden credentials
 
 //  ! vps4618
-const char* ssid = "YOUR_HOTSPOT_SSID";
-const char* password = "YOUR_HOTSPOT_PASSWORD";
 // The live URL provided by Render or your hosting platform
-const char* serverUrl = "https://your-app-name.onrender.com/api/sensor/event";
+const char* serverUrl = "https://smartstudy-backend-psi.vercel.app/api/sensor/event";
 
 #define TRIG_1 5   // Sensor 1 (Outside) Trigger
 #define ECHO_1 18  // Sensor 1 (Outside) Echo
@@ -34,7 +33,7 @@ void sendSensorEvent(String eventType) {
     http.addHeader("Content-Type", "application/json");
 
     // 2. Add your secret API key header here
-    http.addHeader("X-API-Key", "gizmo-secure-key-2026");
+    http.addHeader("X-API-Key", SECRET_API_KEY);
     
     // Format the JSON payload exactly as the FastAPI endpoint expects it
     String payload = "{\"area id\": \"LIBRARY 01\", \"event\": \"" + eventType + "\"}";
@@ -93,6 +92,17 @@ void exited(){
 
 void setup() {
   Serial.begin(9600);
+
+  // ! vps4618
+  // 1. Use the variables from secrets.h to connect to the network
+  WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
+  Serial.print("Connecting to Wi-Fi");
+  // 2. Wait until the connection is established
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.print(".");
+  }
+  Serial.println("\nConnected to Wi-Fi");
 
   pinMode(TRIG_1, OUTPUT);
   pinMode(ECHO_1, INPUT);
