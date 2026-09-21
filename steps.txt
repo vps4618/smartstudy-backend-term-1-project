@@ -63,3 +63,4 @@ vercel hosting
 # hardware wifi ssid , password , key added to local secret file for added protection
 
 # websockets removed as vercel dont support that
+# CORS (Cross-Origin Resource Sharing) error fixed

@@ -2,9 +2,19 @@ import os
 from fastapi import FastAPI , HTTPException , Security , Depends , WebSocket , WebSocketDisconnect , Query
 from fastapi.security.api_key import APIKeyHeader
 from schemas import SensorEvent,mock_db
+from fastapi.middleware.cors import CORSMiddleware
 
 # ! Disable the /docs , /redoc, and openapi.json routes in production
 app = FastAPI(docs_url=None,redoc_url=None,openapi_url=None,title = "SmartStudy Backend")
+
+# Add this CORS configuration
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Allows requests from any domain (like 127.0.0.1)
+    allow_credentials=True,
+    allow_methods=["*"],  # Allows GET, POST, etc.
+    allow_headers=["*"],  # Allows all custom headers (including X-API-Key)
+)
 
 # Define a strong secret key (Do not share this publicly)
 SECRET_API_KEY = os.getenv("SECRET_API_KEY")
