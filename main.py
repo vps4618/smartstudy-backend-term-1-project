@@ -3,28 +3,6 @@ from fastapi import FastAPI , HTTPException , Security , Depends , WebSocket , W
 from fastapi.security.api_key import APIKeyHeader
 from schemas import SensorEvent,mock_db
 
-# create a global ConnectionManager class that stores all active WebSocket connections in memory.
-class ConnectionManager:
-    def __init__(self):
-        self.active_connections: list[WebSocket] = []
-
-    async def connect(self, websocket: WebSocket):
-        await websocket.accept()
-        self.active_connections.append(websocket)
-
-    def disconnect(self, websocket: WebSocket):
-        if websocket in self.active_connections:
-            self.active_connections.remove(websocket)
-
-    async def broadcast(self, message: dict):
-        # Iterate over a copy of the list to prevent errors if a client disconnects during the loop
-        for connection in list(self.active_connections):
-            try:
-                await connection.send_json(message)
-            except Exception:
-                self.disconnect(connection)
-manager = ConnectionManager()
-
 # ! Disable the /docs , /redoc, and openapi.json routes in production
 app = FastAPI(docs_url=None,redoc_url=None,openapi_url=None,title = "SmartStudy Backend")
 
@@ -32,20 +10,6 @@ app = FastAPI(docs_url=None,redoc_url=None,openapi_url=None,title = "SmartStudy 
 SECRET_API_KEY = os.getenv("SECRET_API_KEY")
 api_key_header = APIKeyHeader(name="X-API-Key", auto_error=True)
 
-
-# websocket to receive occupancy change by post method and send to frontend
-@app.websocket("/api/ws")
-async def websocket_endpoint(
-    websocket: WebSocket
-):
-    await manager.connect(websocket)
-    
-    try:
-        while True:
-            # Keep the connection open to listen for client disconnects
-            await websocket.receive_text()
-    except WebSocketDisconnect:
-        manager.disconnect(websocket)
 
 # ! Dependency function to validate incoming requests
 def verify_api_key(api_key: str = Security(api_key_header)):
@@ -87,10 +51,6 @@ async def handle_sensor_event(event_data : SensorEvent, api_key: str = Depends(v
         "new_occupancy": area["current_occupancy"],
         "status": "success"
     }
-
-    # 3. Push the instant update to all connected student dashboard clients
-    await manager.broadcast(live_update)
-    
     return live_update
 
 # displaying study area details

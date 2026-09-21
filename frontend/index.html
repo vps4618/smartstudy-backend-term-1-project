@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <p id="status"></p>
+    <br />
+    <p id="occupancy-count"></p>
+    <br />
+    <p id="log"></p>
+    <script>
+      const statusEl = document.getElementById("status");
+      const occupancyEl = document.getElementById("occupancy-count");
+      const logEl = document.getElementById("log");
+
+      async function fetchOccupancy() {
+        try {
+          // Ping your standard GET endpoint
+          const response = await fetch(
+            "https://smartstudy-backend-psi.vercel.app/api/study-areas",
+          );
+          const data = await response.json();
+
+          // Extract the occupancy for the specific area from your mock_db structure
+          if (data["LIBRARY_02"]) {
+            occupancyEl.textContent = data["LIBRARY_02"].current_occupancy;
+
+            statusEl.textContent = "Connected (Polling)";
+            statusEl.className = "status-badge connected";
+            statusEl.style.color = "green";
+
+            logMessage(
+              `Checked occupancy: ${data["LIBRARY_02"].current_occupancy}`,
+            );
+          }
+        } catch (error) {
+          console.error("Error fetching data:", error);
+          statusEl.textContent = "Disconnected";
+          statusEl.style.color = "red";
+        }
+      }
+
+      function logMessage(text) {
+        const entry = document.createElement("div");
+        entry.textContent = `[\({new Date().toLocaleTimeString()}]\){text}`;
+        logEl.prepend(entry);
+      }
+
+      // Fetch the data immediately on load, then re-fetch every 3 seconds (3000ms)
+      fetchOccupancy();
+      setInterval(fetchOccupancy, 3000);
+    </script>
+  </body>
+</html>
