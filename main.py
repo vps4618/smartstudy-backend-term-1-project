@@ -1,3 +1,4 @@
+import os
 from fastapi import FastAPI , HTTPException , Security , Depends
 from fastapi.security.api_key import APIKeyHeader
 from schemas import SensorEvent,mock_db
@@ -6,11 +7,15 @@ from schemas import SensorEvent,mock_db
 app = FastAPI(docs_url=None,redoc_url=None,openapi_url=None,title = "SmartStudy Backend")
 
 # Define a strong secret key (Do not share this publicly)
-SECRET_API_KEY = "gizmo-secure-key-2026" 
+SECRET_API_KEY = os.getenv("SECRET_API_KEY")
 api_key_header = APIKeyHeader(name="X-API-Key", auto_error=True)
 
 # ! Dependency function to validate incoming requests
 def verify_api_key(api_key: str = Security(api_key_header)):
+    # Failsafe to prevent bypassing security if the environment variable goes missing
+    if not SECRET_API_KEY:
+        raise HTTPException(status_code=500, detail="Server configuration error")
+        
     if api_key != SECRET_API_KEY:
         raise HTTPException(status_code=403, detail="Access forbidden: Invalid API Key")
     return api_key

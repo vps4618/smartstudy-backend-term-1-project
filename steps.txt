@@ -54,4 +54,4 @@ vercel hosting
 # github previous commits also shouldn't contain that key
 # websocket adding reason - they are faster than http request and allow realtime updates
 # frontend dont need secure key as they dont change database values
-# new key added to vercel
+# new key added to vercel and os module will be use to import that.
