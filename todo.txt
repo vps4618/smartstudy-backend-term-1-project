@@ -6,3 +6,5 @@
     write in steps changes done
 2. database
 
+3. create secret key different from previous github commits and save it in vercel
+4. secure hardware team script key

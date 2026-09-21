@@ -29,8 +29,13 @@ void sendSensorEvent(String eventType) {
 
     HTTPClient http;
     http.begin(client, serverUrl);
+
+    // 1. Standard content type header
     http.addHeader("Content-Type", "application/json");
 
+    // 2. Add your secret API key header here
+    http.addHeader("X-API-Key", "gizmo-secure-key-2026");
+    
     // Format the JSON payload exactly as the FastAPI endpoint expects it
     String payload = "{\"area id\": \"LIBRARY 01\", \"event\": \"" + eventType + "\"}";
     
