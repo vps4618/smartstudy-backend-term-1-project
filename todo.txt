@@ -1,2 +1,8 @@
-1. database
-2. create websocket for real-time updates (analyze why this need)
+1. protection 
+    store key securly
+    wesocket for real time updates
+    websocket security
+
+    write in steps changes done
+2. database
+
