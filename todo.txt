@@ -1,10 +1,13 @@
-1. protection 
-    store key securly
-    wesocket for real time updates
-    websocket security
+1. done - protection
+   done - store key securly
+   removed - wesocket for real time updates
+   removed - websocket security
 
-    write in steps changes done
+   done - write in steps changes done
+
 2. database
 
-3. create secret key different from previous github commits and save it in vercel
+3. done - create secret key different from previous github commits and save it in vercel
+
 4. secure hardware team script key
+5. frontend integration

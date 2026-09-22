@@ -45,10 +45,12 @@
 
       function logMessage(text) {
         const entry = document.createElement("div");
-        entry.textContent = `[\({new Date().toLocaleTimeString()}]\){text}`;
+
+        // Using standard string addition to avoid character corruption
+        entry.textContent = "[" + new Date().toLocaleTimeString() + "] " + text;
+
         logEl.prepend(entry);
       }
-
       // Fetch the data immediately on load, then re-fetch every 3 seconds (3000ms)
       fetchOccupancy();
       setInterval(fetchOccupancy, 3000);
